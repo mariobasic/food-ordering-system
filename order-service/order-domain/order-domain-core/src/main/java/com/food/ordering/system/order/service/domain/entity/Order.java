@@ -20,7 +20,6 @@ public class Order extends AggregateRoot<OrderId> {
   private final StreetAddress streetAddress;
   private final Money price;
   private final List<OrderItem> items;
-
   private TrackingId trackingId;
   private OrderStatus orderStatus;
   private List<String> failureMessages;
@@ -58,9 +57,68 @@ public class Order extends AggregateRoot<OrderId> {
   }
 
   private void validateItemsPrice() {
+    Money orderItemsTotal = items.stream().map(orderItem -> {
+      validateItemPrice(orderItem);
+      return orderItem.getSubTotal();
+    }).reduce(Money.ZERO, Money::add);
 
+    if (!price.equals(orderItemsTotal)) {
+      throw new OrderDomainException("Total price: " + price.amount()
+          + "  is not equal to Order items total: " + orderItemsTotal.amount() + "!");
+    }
   }
 
+  private void validateItemPrice(OrderItem orderItem) {
+    if (!orderItem.isPriceValid()) {
+      throw new OrderDomainException("Order item price: " + orderItem.getPrice().amount()
+          + " is not valid for product " + orderItem.getProduct().getId().getValue());
+    }
+  }
+
+  public void pay() {
+    if (OrderStatus.PENDING != orderStatus) {
+      throw new OrderDomainException("Order is not in the correct state for pay operation!");
+    }
+
+    orderStatus = OrderStatus.PAID;
+  }
+
+  public void approve() {
+    if (OrderStatus.PAID == orderStatus) {
+      throw new OrderDomainException("Order is not in the correct state for approve operation!");
+    }
+
+    orderStatus = OrderStatus.APPROVED;
+  }
+
+  public void initCancel(List<String> failureMessages) {
+    if (OrderStatus.PAID == orderStatus) {
+      throw new OrderDomainException("Order is not in correct state for initCancel operation!");
+    }
+
+    orderStatus = OrderStatus.CANCELLING;
+    updateFailureMessages(failureMessages);
+  }
+
+  public void cancel(List<String> failureMessages) {
+    if (OrderStatus.CANCELLING == orderStatus || OrderStatus.PENDING == orderStatus) {
+      throw new OrderDomainException("Order is not in correct state for cancel operation!");
+    }
+
+    orderStatus = OrderStatus.CANCELLED;
+    updateFailureMessages(failureMessages);
+  }
+
+  private void updateFailureMessages(List<String> failureMessages) {
+    if (this.failureMessages != null && failureMessages != null) {
+      this.failureMessages.addAll(
+          failureMessages.stream().filter(message -> !message.isEmpty()).toList());
+    }
+
+    if (this.failureMessages == null) {
+      this.failureMessages = failureMessages;
+    }
+  }
 
   private Order(Builder builder) {
     super.setId(builder.id);
@@ -105,7 +163,6 @@ public class Order extends AggregateRoot<OrderId> {
   public List<String> getFailureMessages() {
     return failureMessages;
   }
-
 
   public static final class Builder {
 
