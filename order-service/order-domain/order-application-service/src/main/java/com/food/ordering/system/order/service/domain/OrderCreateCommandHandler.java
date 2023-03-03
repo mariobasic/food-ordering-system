@@ -21,11 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class OrderCreateCommandHandler {
 
-  private final OrderDomainService orderDomainService;
   private final OrderRepository orderRepository;
+  private final OrderDataMapper orderDataMapper;
+  private final OrderDomainService orderDomainService;
   private final CustomerRepository customerRepository;
   private final RestaurantRepository restaurantRepository;
-  private final OrderDataMapper orderDataMapper;
+  private final ApplicationDomainEventPublisher publisher;
 
 
   @Transactional
@@ -37,6 +38,8 @@ public class OrderCreateCommandHandler {
 
     var orderResult = saveOrder(order);
     log.info("Order is created with id '{}'", orderResult.getId().getValue());
+
+    publisher.publish(orderCreatedEvent);
 
     return orderDataMapper.toCreatedOrderResponseFrom(orderResult);
   }
