@@ -28,7 +28,6 @@ public class Order extends AggregateRoot<OrderId> {
   private List<String> failureMessages;
 
   @Builder
-
   public Order(OrderId orderId, CustomerId customerId, RestaurantId restaurantId, StreetAddress deliveryAddress,
       Money price, List<OrderItem> items, TrackingId trackingId, OrderStatus orderStatus,
       List<String> failureMessages) {
@@ -90,7 +89,7 @@ public class Order extends AggregateRoot<OrderId> {
   private void validateItemPrice(OrderItem orderItem) {
     if (!orderItem.isPriceValid()) {
       throw new OrderDomainException("Order item price: " + orderItem.getPrice().amount()
-          + " is not valid for product " + orderItem.getProduct().getId().getValue());
+           + " is not valid for product " + orderItem.getProduct().getId().getValue());
     }
   }
 
