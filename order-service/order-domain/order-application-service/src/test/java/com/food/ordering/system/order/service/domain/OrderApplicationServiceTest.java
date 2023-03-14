@@ -1,16 +1,12 @@
 package com.food.ordering.system.order.service.domain;
 
 import com.food.ordering.system.domain.valueobject.CustomerId;
-import com.food.ordering.system.domain.valueobject.Money;
 import com.food.ordering.system.domain.valueobject.OrderId;
 import com.food.ordering.system.domain.valueobject.OrderStatus;
-import com.food.ordering.system.domain.valueobject.ProductId;
-import com.food.ordering.system.domain.valueobject.RestaurantId;
 import com.food.ordering.system.order.service.domain.dto.create.CreateOrderCommand;
 import com.food.ordering.system.order.service.domain.dto.create.CreateOrderResponse;
 import com.food.ordering.system.order.service.domain.entity.Customer;
 import com.food.ordering.system.order.service.domain.entity.Order;
-import com.food.ordering.system.order.service.domain.entity.Product;
 import com.food.ordering.system.order.service.domain.entity.Restaurant;
 import com.food.ordering.system.order.service.domain.exception.OrderDomainException;
 import com.food.ordering.system.order.service.domain.mapper.OrderDataMapper;
@@ -19,7 +15,6 @@ import com.food.ordering.system.order.service.domain.ports.output.repository.Cus
 import com.food.ordering.system.order.service.domain.ports.output.repository.OrderRepository;
 import com.food.ordering.system.order.service.domain.ports.output.repository.RestaurantRepository;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,21 +70,7 @@ public class OrderApplicationServiceTest {
     Customer customer = new Customer();
     customer.setId(new CustomerId(CUSTOMER_ID));
 
-    Restaurant restaurantResponse = Restaurant.builder()
-        .restaurantId(new RestaurantId(createOrderCommand.getRestaurantId()))
-        .products(List.of(
-            Product.builder()
-                .productId(new ProductId(PRODUCT1_ID))
-                .name("product-1")
-                .price(new Money(new BigDecimal("50.00")))
-                .build(),
-            Product.builder()
-                .productId(new ProductId(PRODUCT2_ID))
-                .name("product-2")
-                .price(new Money(new BigDecimal("50.00")))
-                .build()))
-        .active(true)
-        .build();
+    Restaurant restaurantResponse = EntityBuilder.activeRestaurant();
 
     Order order = orderDataMapper.toOrderFrom(createOrderCommand);
     order.setId(new OrderId(ORDER_ID));

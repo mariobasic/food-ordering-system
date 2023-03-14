@@ -101,6 +101,24 @@ class EntityBuilder {
         .build();
   }
 
+  public static Restaurant activeRestaurant() {
+    return Restaurant.builder()
+        .restaurantId(new RestaurantId(RESTAURANT_ID))
+        .products(List.of(
+            Product.builder()
+                .productId(new ProductId(PRODUCT1_ID))
+                .name("product-1")
+                .price(new Money(new BigDecimal("50.00")))
+                .build(),
+            Product.builder()
+                .productId(new ProductId(PRODUCT2_ID))
+                .name("product-2")
+                .price(new Money(new BigDecimal("50.00")))
+                .build()))
+        .active(true)
+        .build();
+  }
+
   public static Restaurant inactiveRestaurant() {
     return Restaurant.builder()
         .restaurantId(new RestaurantId(RESTAURANT_ID))
