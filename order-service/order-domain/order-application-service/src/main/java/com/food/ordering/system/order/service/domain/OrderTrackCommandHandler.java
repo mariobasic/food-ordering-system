@@ -23,7 +23,7 @@ public class OrderTrackCommandHandler {
 
   @Transactional(readOnly = true)
   public TrackOrderResponse trackOrder(TrackOrderQuery query) {
-    Order orderResult = getTrackingOrder(query.getOrderTrackingId());
+    Order orderResult = getTrackingOrder(query.orderTrackingId());
 
     return mapper.toTrackOrderResponseFrom(orderResult);
   }

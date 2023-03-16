@@ -29,7 +29,7 @@ public class OrderCreateHelper {
 
   @Transactional
   public OrderCreatedEvent persistOrder(CreateOrderCommand command) {
-    checkCustomer(command.getCustomerId());
+    checkCustomer(command.customerId());
     var restaurant = checkRestaurant(command);
     var order = orderDataMapper.toOrderFrom(command);
     var orderCreatedEvent = orderDomainService.validateAndInitiateOrder(order, restaurant);
@@ -65,7 +65,7 @@ public class OrderCreateHelper {
 
     return restaurantRepository.findRestaurantInformation(restaurant)
         .orElseThrow(() -> {
-          UUID restaurantId = createOrderCommand.getRestaurantId();
+          UUID restaurantId = createOrderCommand.restaurantId();
           log.warn("Could not find restaurant with restaurant id '{}'", restaurantId);
 
           throw new OrderDomainException("Couldn't find restaurant with id: " + restaurantId);

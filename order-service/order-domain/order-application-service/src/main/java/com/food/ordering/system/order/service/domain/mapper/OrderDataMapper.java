@@ -24,9 +24,9 @@ public class OrderDataMapper {
   public Restaurant toRestaurantFrom(CreateOrderCommand command) {
 
     return Restaurant.builder()
-        .restaurantId(new RestaurantId(command.getRestaurantId()))
+        .restaurantId(new RestaurantId(command.restaurantId()))
         .products(
-            command.getItems().stream()
+            command.items().stream()
                 .map(
                     com.food.ordering.system.order.service.domain.dto.create.OrderItem::getProductId)
                 .map(ProductId::new)
@@ -37,11 +37,11 @@ public class OrderDataMapper {
 
   public Order toOrderFrom(CreateOrderCommand command) {
     return Order.builder()
-        .customerId(new CustomerId(command.getCustomerId()))
-        .restaurantId(new RestaurantId(command.getRestaurantId()))
-        .deliveryAddress(orderAddressToStreetAddress(command.getAddress()))
-        .price(new Money(command.getPrice()))
-        .items(orderItemsToOrderItemsEntities(command.getItems()))
+        .customerId(new CustomerId(command.customerId()))
+        .restaurantId(new RestaurantId(command.restaurantId()))
+        .deliveryAddress(orderAddressToStreetAddress(command.address()))
+        .price(new Money(command.price()))
+        .items(orderItemsToOrderItemsEntities(command.items()))
         .build();
   }
 

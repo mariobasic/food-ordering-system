@@ -88,9 +88,9 @@ public class OrderApplicationServiceTest {
   @Test
   public void givenCorrectCreateOrderCommand_WhenCreateOrder_ThanCreateOrder() {
     CreateOrderResponse order = orderApplicationService.createOrder(createOrderCommand);
-    assertEquals(OrderStatus.PENDING, order.getOrderStatus());
-    assertEquals("Order created successfully", order.getMessage());
-    assertNotNull(order.getOrderTrackingId());
+    assertEquals(OrderStatus.PENDING, order.orderStatus());
+    assertEquals("Order created successfully", order.message());
+    assertNotNull(order.orderTrackingId());
   }
 
   @Test
