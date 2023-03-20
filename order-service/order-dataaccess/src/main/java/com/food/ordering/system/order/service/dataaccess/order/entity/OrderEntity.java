@@ -41,7 +41,7 @@ public class OrderEntity {
   @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
   private OrderAddressEntity address;
 
-  // TODO: 20.3.23. test with MapsId
+  // TODO: 20.3.23. test with MapsId¡
   // generate the ID for OrderAddressEntity
 //  @MapsId
 //  @OneToOne(cascade = CascadeType.ALL)
