@@ -1,11 +1,8 @@
-package com.food.ordering.system.order.service.dataaccess.order.entity;
+package com.food.ordering.system.order.service.dataaccess.restaurant.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -22,23 +19,18 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "order_items")
-@IdClass(OrderItemEntityId.class)
-public class OrderItemEntity {
-
-  // TODO: 20.3.23. try with embeddable id
-  @Id
-  private Long id;
+@IdClass(RestaurantEntityId.class)
+@Table(name = "order_restaurant_m_view", schema = "restaurant")
+public class RestaurantEntity {
 
   @Id
-  @JoinColumn(name = "ORDER_ID")
-  @ManyToOne(cascade = CascadeType.ALL)
-  private OrderEntity order;
-
+  private UUID restaurantId;
+  @Id
   private UUID productId;
-  private BigDecimal price;
-  private Integer quantity;
-  private BigDecimal subTotal;
+  private String restaurantName;
+  private Boolean restaurantActive;
+  private String productName;
+  private BigDecimal productPrice;
 
   @Override
   public boolean equals(Object o) {
@@ -48,12 +40,12 @@ public class OrderItemEntity {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    OrderItemEntity that = (OrderItemEntity) o;
-    return id.equals(that.id) && order.equals(that.order);
+    RestaurantEntity that = (RestaurantEntity) o;
+    return restaurantId.equals(that.restaurantId) && productId.equals(that.productId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, order);
+    return Objects.hash(restaurantId, productId);
   }
 }
