@@ -20,7 +20,7 @@ public class RestaurantApprovalResponseMessageListenerImpl implements
   }
 
   @Override
-  public void orderCanceled(RestaurantApprovalResponse response) {
+  public void orderRejected(RestaurantApprovalResponse response) {
 
   }
 }

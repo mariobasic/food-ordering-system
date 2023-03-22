@@ -39,6 +39,8 @@ public class KafkaProducerImpl<K extends Serializable, V extends SpecificRecordB
     }
   }
 
+
+
   public void close() {
     if (kafkaTemplate != null) {
       log.info("Closing kafka producer");

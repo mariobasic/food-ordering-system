@@ -27,6 +27,8 @@ public record Money(BigDecimal amount) {
     return new Money(setScale(this.amount.multiply(BigDecimal.valueOf(multiplier))));
   }
 
+
+
   private BigDecimal setScale(BigDecimal input) {
     return input.setScale(2, RoundingMode.HALF_EVEN);
   }
