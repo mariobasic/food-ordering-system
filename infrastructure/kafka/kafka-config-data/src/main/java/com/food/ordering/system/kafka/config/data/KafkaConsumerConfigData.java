@@ -1,26 +1,23 @@
 package com.food.ordering.system.kafka.config.data;
 
-import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
-@Data
-@Configuration
 @ConfigurationProperties(prefix = "kafka-consumer-config")
-public class KafkaConsumerConfigData {
-  private String keyDeserializer;
-  private String valueDeserializer;
-  private String autoOffsetReset;
-  private String specificAvroReaderKey;
-  private String specificAvroReader;
-  private Boolean batchListener;
-  private Boolean autoStartup;
-  private Integer concurrencyLevel;
-  private Integer sessionTimeoutMs;
-  private Integer heartbeatIntervalMs;
-  private Integer maxPollIntervalMs;
-  private Long pollTimeoutMs;
-  private Integer maxPollRecords;
-  private Integer maxPartitionFetchBytesDefault;
-  private Integer maxPartitionFetchBytesBoostFactor;
+public record KafkaConsumerConfigData(
+    String keyDeserializer,
+    String valueDeserializer,
+    String autoOffsetReset,
+    String specificAvroReaderKey,
+    String specificAvroReader,
+    Boolean batchListener,
+    Boolean autoStartup,
+    Integer concurrencyLevel,
+    Integer sessionTimeoutMs,
+    Integer heartbeatIntervalMs,
+    Integer maxPollIntervalMs,
+    Long pollTimeoutMs,
+    Integer maxPollRecords,
+    Integer maxPartitionFetchBytesDefault,
+    Integer maxPartitionFetchBytesBoostFactor) {
+
 }
