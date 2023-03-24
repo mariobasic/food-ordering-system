@@ -24,17 +24,17 @@ public class KafkaProducerConfig<K extends Serializable, V extends SpecificRecor
   @Bean
   public Map<String, Object> producerConfig() {
     Map<String, Object> props = new HashMap<>();
-    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConfigData.getBootstrapServers());
-    props.put(kafkaConfigData.getSchemaRegistryUrlKey(), kafkaConfigData.getSchemaRegistryUrl());
-    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, kafkaProducerConfigData.getKeySerializerClass());
-    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, kafkaProducerConfigData.getValueSerializerClass());
-    props.put(ProducerConfig.BATCH_SIZE_CONFIG, kafkaProducerConfigData.getBatchSize() *
-        kafkaProducerConfigData.getBatchSizeBoostFactor());
-    props.put(ProducerConfig.LINGER_MS_CONFIG, kafkaProducerConfigData.getLingerMs());
-    props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, kafkaProducerConfigData.getCompressionType());
-    props.put(ProducerConfig.ACKS_CONFIG, kafkaProducerConfigData.getAcks());
-    props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, kafkaProducerConfigData.getRequestTimeoutMs());
-    props.put(ProducerConfig.RETRIES_CONFIG, kafkaProducerConfigData.getRetryCount());
+    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConfigData.bootstrapServers());
+    props.put(kafkaConfigData.schemaRegistryUrlKey(), kafkaConfigData.schemaRegistryUrl());
+    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, kafkaProducerConfigData.keySerializerClass());
+    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, kafkaProducerConfigData.valueSerializerClass());
+    props.put(ProducerConfig.BATCH_SIZE_CONFIG, kafkaProducerConfigData.batchSize() *
+        kafkaProducerConfigData.batchSizeBoostFactor());
+    props.put(ProducerConfig.LINGER_MS_CONFIG, kafkaProducerConfigData.lingerMs());
+    props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, kafkaProducerConfigData.compressionType());
+    props.put(ProducerConfig.ACKS_CONFIG, kafkaProducerConfigData.acks());
+    props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, kafkaProducerConfigData.requestTimeoutMs());
+    props.put(ProducerConfig.RETRIES_CONFIG, kafkaProducerConfigData.retryCount());
     return props;
   }
 
