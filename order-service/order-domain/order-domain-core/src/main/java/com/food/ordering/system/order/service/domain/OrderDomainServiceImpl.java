@@ -1,5 +1,6 @@
 package com.food.ordering.system.order.service.domain;
 
+import com.food.ordering.system.domain.valueobject.ProductId;
 import com.food.ordering.system.order.service.domain.entity.Order;
 import com.food.ordering.system.order.service.domain.entity.OrderItem;
 import com.food.ordering.system.order.service.domain.entity.Product;
@@ -43,14 +44,19 @@ public class OrderDomainServiceImpl implements OrderDomainService {
 
   private void setOrderProductInformation(Order order, Restaurant restaurant) {
 
-    Map<Product, Product> collect = order.getItems().stream().map(OrderItem::getProduct)
-        .collect(Collectors.toMap(Function.identity(), Function.identity()));
+    Map<ProductId, Product> restaurantProductPerId = restaurant.getProducts().stream()
+        .collect(Collectors.toMap(Product::getId, Function.identity()));
 
-    restaurant.getProducts().forEach(product ->
-        Optional.ofNullable(collect.get(product))
-            .ifPresent(orderProduct ->
-                orderProduct.updateWithConfirmedNameAndPrice(product.getName(),
-                    product.getPrice())));
+    order.getItems().stream()
+        .map(OrderItem::getProduct)
+        .forEach(orderProduct ->
+            Optional.ofNullable(restaurantProductPerId.get(orderProduct.getId()))
+                .ifPresent(restaurantProduct ->
+
+                    orderProduct.updateWithConfirmedNameAndPrice(
+                        restaurantProduct.getName(),
+                        restaurantProduct.getPrice())));
+
   }
 
   @Override

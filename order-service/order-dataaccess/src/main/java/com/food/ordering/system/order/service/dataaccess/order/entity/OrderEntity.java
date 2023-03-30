@@ -10,6 +10,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -48,7 +49,7 @@ public class OrderEntity {
 //  private OrderAddressEntity orderAddressEntity;
 
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-  private List<OrderItemEntity> items;
+  private List<OrderItemEntity> items = new ArrayList<>();
 
 
   public void addOrderAddressEntity(OrderAddressEntity orderAddress) {
@@ -57,6 +58,9 @@ public class OrderEntity {
   }
 
   public void addOrderItemEntity(OrderItemEntity orderItem) {
+    if (this.items == null) {
+      this.items = new ArrayList<>();
+    }
     this.items.add(orderItem);
     orderItem.setOrder(this);
   }
