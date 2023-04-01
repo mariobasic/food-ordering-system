@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>payment-application-service</artifactId>
+  <artifactId>payment-domain-core</artifactId>
 
   <dependencies>
     <dependency>
