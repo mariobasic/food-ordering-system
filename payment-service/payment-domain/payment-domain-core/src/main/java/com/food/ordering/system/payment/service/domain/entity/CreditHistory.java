@@ -15,9 +15,9 @@ import lombok.Getter;
 @Getter
 public class CreditHistory extends BaseEntity<CreditHistoryId> {
 
-  public final CustomerId customerId;
-  public final Money amount;
-  public final TransactionType transactionType;
+  private final CustomerId customerId;
+  private final Money amount;
+  private final TransactionType transactionType;
 
 
   @Builder
