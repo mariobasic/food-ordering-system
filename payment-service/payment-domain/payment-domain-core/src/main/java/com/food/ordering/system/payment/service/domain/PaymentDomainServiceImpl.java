@@ -100,7 +100,7 @@ public class PaymentDomainServiceImpl implements PaymentDomainService {
       List<CreditHistory> creditHistories, List<String> failureMessages) {
 
     payment.validatePayment(failureMessages);
-    addCreditEntry(payment, creditEntry);
+    creditEntry.addCreditAmount(payment.getPrice());
     updateCreditHistory(payment,creditHistories, TransactionType.CREDIT);
 
     if (failureMessages.isEmpty()) {
@@ -111,10 +111,6 @@ public class PaymentDomainServiceImpl implements PaymentDomainService {
 
     log.info("Payment cancellation failed for order with id '{}'", payment.getOrderId().getValue());
     return new PaymentFailedEvent(payment, ZonedDateTime.now(UTC_ZONE), failureMessages);
-  }
-
-  private void addCreditEntry(Payment payment, CreditEntry creditEntry) {
-    creditEntry.addCreditAmount(payment.getPrice());
   }
 
   private void updateCreditHistory(Payment payment, List<CreditHistory> creditHistories,

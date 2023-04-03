@@ -56,7 +56,7 @@ public class OrderCreateHelper {
     return Optional.ofNullable(orderRepository.save(order))
         .orElseThrow(() -> {
           log.error("Could not save order!");
-          throw new OrderDomainException("Could not save order!");
+          return new OrderDomainException("Could not save order!");
         });
   }
 
@@ -68,7 +68,7 @@ public class OrderCreateHelper {
           UUID restaurantId = createOrderCommand.restaurantId();
           log.warn("Could not find restaurant with restaurant id '{}'", restaurantId);
 
-          throw new OrderDomainException("Couldn't find restaurant with id: " + restaurantId);
+          return new OrderDomainException("Couldn't find restaurant with id: " + restaurantId);
         });
   }
 }
