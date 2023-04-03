@@ -1,4 +1,4 @@
-package com.food.ordering.system.order.service.mapper;
+package com.food.ordering.system.order.service.messaging.mapper;
 
 import com.food.ordering.system.domain.valueobject.OrderApprovalStatus;
 import com.food.ordering.system.domain.valueobject.PaymentStatus;
