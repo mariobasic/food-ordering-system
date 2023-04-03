@@ -6,6 +6,7 @@ import com.food.ordering.system.order.service.domain.entity.Restaurant;
 import com.food.ordering.system.order.service.domain.event.OrderCreatedEvent;
 import com.food.ordering.system.order.service.domain.exception.OrderDomainException;
 import com.food.ordering.system.order.service.domain.mapper.OrderDataMapper;
+import com.food.ordering.system.order.service.domain.ports.output.message.publishers.payment.OrderCreatedPaymentRequestMessagePublisher;
 import com.food.ordering.system.order.service.domain.ports.output.repository.CustomerRepository;
 import com.food.ordering.system.order.service.domain.ports.output.repository.OrderRepository;
 import com.food.ordering.system.order.service.domain.ports.output.repository.RestaurantRepository;
@@ -26,13 +27,15 @@ public class OrderCreateHelper {
   private final CustomerRepository customerRepository;
   private final RestaurantRepository restaurantRepository;
   private final OrderDataMapper orderDataMapper;
+  private final OrderCreatedPaymentRequestMessagePublisher orderCreatedPublisher;
 
   @Transactional
   public OrderCreatedEvent persistOrder(CreateOrderCommand command) {
     checkCustomer(command.customerId());
     var restaurant = checkRestaurant(command);
     var order = orderDataMapper.toOrderFrom(command);
-    var orderCreatedEvent = orderDomainService.validateAndInitiateOrder(order, restaurant);
+    var orderCreatedEvent =
+        orderDomainService.validateAndInitiateOrder(order, restaurant, orderCreatedPublisher);
 
     saveOrder(order);
     log.info("Order is created with id '{}'", orderCreatedEvent.getOrder().getId().getValue());
@@ -52,6 +55,7 @@ public class OrderCreateHelper {
     }
   }
 
+  @SuppressWarnings("UnusedReturnValue")
   private Order saveOrder(Order order) {
     return Optional.ofNullable(orderRepository.save(order))
         .orElseThrow(() -> {

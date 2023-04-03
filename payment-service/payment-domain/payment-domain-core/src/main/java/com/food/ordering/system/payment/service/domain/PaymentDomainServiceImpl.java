@@ -1,5 +1,6 @@
 package com.food.ordering.system.payment.service.domain;
 
+import com.food.ordering.system.domain.event.publisher.DomainEventPublisher;
 import com.food.ordering.system.domain.valueobject.Money;
 import com.food.ordering.system.domain.valueobject.PaymentStatus;
 import com.food.ordering.system.payment.service.domain.entity.CreditEntry;
@@ -22,8 +23,11 @@ import static com.food.ordering.system.domain.DomainConstants.UTC_ZONE;
 public class PaymentDomainServiceImpl implements PaymentDomainService {
 
   @Override
-  public PaymentEvent validateAndInitiatePayment(Payment payment, CreditEntry creditEntry,
-      List<CreditHistory> creditHistories, List<String> failureMessages) {
+  public PaymentEvent validateAndInitiatePayment(Payment payment,
+      CreditEntry creditEntry,
+      List<CreditHistory> creditHistories, List<String> failureMessages,
+      DomainEventPublisher<PaymentCompletedEvent> paymentCompletedPublisher,
+      DomainEventPublisher<PaymentFailedEvent> paymentFailedPublisher) {
 
     payment.validatePayment(failureMessages);
     payment.initializePayment();
@@ -36,7 +40,7 @@ public class PaymentDomainServiceImpl implements PaymentDomainService {
       log.info("Payment is initialized for order with id '{}'", payment.getOrderId().getValue());
       payment.updateStatus(PaymentStatus.COMPLETED);
 
-      return new PaymentCompletedEvent(payment, ZonedDateTime.now(UTC_ZONE));
+      return new PaymentCompletedEvent(payment, ZonedDateTime.now(UTC_ZONE), paymentCompletedPublisher);
 
     }
 
@@ -44,7 +48,7 @@ public class PaymentDomainServiceImpl implements PaymentDomainService {
         payment.getOrderId().getValue());
     payment.updateStatus(PaymentStatus.FAILED);
 
-    return new PaymentFailedEvent(payment, ZonedDateTime.now(UTC_ZONE), failureMessages);
+    return new PaymentFailedEvent(payment, ZonedDateTime.now(UTC_ZONE), failureMessages, paymentFailedPublisher);
   }
 
   private void validateCreditEntry(Payment payment, CreditEntry creditEntry,
@@ -97,7 +101,9 @@ public class PaymentDomainServiceImpl implements PaymentDomainService {
 
   @Override
   public PaymentEvent validateAndCancelPayment(Payment payment, CreditEntry creditEntry,
-      List<CreditHistory> creditHistories, List<String> failureMessages) {
+      List<CreditHistory> creditHistories, List<String> failureMessages,
+      DomainEventPublisher<PaymentCanceledEvent> publisher,
+      DomainEventPublisher<PaymentFailedEvent> paymentFailedEventPublisher) {
 
     payment.validatePayment(failureMessages);
     creditEntry.addCreditAmount(payment.getPrice());
@@ -106,11 +112,11 @@ public class PaymentDomainServiceImpl implements PaymentDomainService {
     if (failureMessages.isEmpty()) {
       log.info("Payment is cancelled for order with id '{}'", payment.getOrderId().getValue());
       payment.updateStatus(PaymentStatus.CANCELED);
-      return new PaymentCanceledEvent(payment, ZonedDateTime.now(UTC_ZONE));
+      return new PaymentCanceledEvent(payment, ZonedDateTime.now(UTC_ZONE), publisher);
     }
 
     log.info("Payment cancellation failed for order with id '{}'", payment.getOrderId().getValue());
-    return new PaymentFailedEvent(payment, ZonedDateTime.now(UTC_ZONE), failureMessages);
+    return new PaymentFailedEvent(payment, ZonedDateTime.now(UTC_ZONE), failureMessages, paymentFailedEventPublisher);
   }
 
   private void updateCreditHistory(Payment payment, List<CreditHistory> creditHistories,
