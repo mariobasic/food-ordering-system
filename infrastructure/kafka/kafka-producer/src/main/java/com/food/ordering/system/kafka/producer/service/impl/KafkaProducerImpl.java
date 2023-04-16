@@ -3,7 +3,6 @@ package com.food.ordering.system.kafka.producer.service.impl;
 import com.food.ordering.system.kafka.producer.exception.KafkaProducerException;
 import com.food.ordering.system.kafka.producer.service.KafkaProducer;
 import java.io.Serializable;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +28,9 @@ public class KafkaProducerImpl<K extends Serializable, V extends SpecificRecordB
     log.info("Sending message '{}' to topic '{}'", message, topicName);
 
     try {
-      CompletableFuture<SendResult<K, V>> send = kafkaTemplate.send(topicName, key, message);
-      send.whenComplete(handler);
+      kafkaTemplate.send(topicName, key, message)
+          .whenComplete(handler);
+
     } catch (KafkaException e) {
       log.error("Error on kafka producer with key '{}', message '{}' and exception message '{}'",
           key, message, e.getMessage());

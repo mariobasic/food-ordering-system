@@ -1,6 +1,7 @@
 package com.food.ordering.system.order.service.messaging.publisher.kafka;
 
 import com.food.ordering.system.kafka.order.avro.model.PaymentRequestAvroModel;
+import com.food.ordering.system.kafka.producer.service.KafkaMessageHelper;
 import com.food.ordering.system.kafka.producer.service.KafkaProducer;
 import com.food.ordering.system.order.service.domain.config.OrderServiceConfigData;
 import com.food.ordering.system.order.service.domain.event.OrderCreatedEvent;
@@ -18,7 +19,7 @@ public class CreateOrderKafkaMessagePublisher implements
 
   private final OrderMessagingDataMapper mapper;
   private final OrderServiceConfigData configData;
-  private final OrderKafkaMessageHelper orderKafkaMessageHelper;
+  private final KafkaMessageHelper kafkaMessageHelper;
   private final KafkaProducer<String, PaymentRequestAvroModel> kafkaProducer;
 
   @Override
@@ -32,7 +33,7 @@ public class CreateOrderKafkaMessagePublisher implements
       var topicMessage = mapper.orderCreatedEventToPaymentRequestAvroModel(domainEvent);
 
       kafkaProducer.send(topicName, orderId, topicMessage,
-          orderKafkaMessageHelper.getHandler(
+          kafkaMessageHelper.getHandler(
               topicName, topicMessage, orderId, "PaymentRequestAvroModel"));
 
       log.info("PaymentRequestAvroModel sent to Kafka for order id '{}'", orderId);
