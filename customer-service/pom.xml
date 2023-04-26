@@ -35,6 +35,9 @@
         <configuration>
           <image>
             <name>${project.groupId}/customer.service:${project.version}</name>
+            <env>
+              <BP_JVM_VERSION>17</BP_JVM_VERSION>
+            </env>
           </image>
         </configuration>
         <executions>

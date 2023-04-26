@@ -65,12 +65,6 @@ public class RestaurantApprovalRequestHelper {
 
   private Restaurant getRestaurantEntity(Restaurant restaurant) {
 
-    restaurantRepository.findRestaurantInformation(restaurant)
-        .orElseThrow(() -> {
-          log.error("Restaurant with id '{}' not found!", restaurant.getId().getValue());
-          return new RestaurantNotFoundException(
-              "Restaurant with id '" + restaurant.getId().getValue() + "' not found!");
-        });
 
     return restaurantRepository.findRestaurantInformation(restaurant)
         .orElseThrow(() -> {

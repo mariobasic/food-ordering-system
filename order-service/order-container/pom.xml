@@ -46,10 +46,13 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-<!--        <version>3.0.4</version>-->
+        <version>3.0.6</version>
         <configuration>
           <image>
             <name>${project.groupId}/order.service:${project.version}</name>
+            <env>
+              <BP_JVM_VERSION>17</BP_JVM_VERSION>
+            </env>
           </image>
         </configuration>
         <executions>

@@ -33,7 +33,7 @@ public class OrderTrackCommandHandler {
     return orderRepository.findByTrackingId(new TrackingId(orderTrackingId))
         .orElseThrow(() -> {
           log.warn("Could not find order with tracking id '{}'", orderTrackingId);
-          throw new OrderNotFoundException(
+          return new OrderNotFoundException(
               "Could not find order with tracking id: " + orderTrackingId);
         });
   }
